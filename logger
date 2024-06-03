@@ -14,3 +14,27 @@ def get_logger(name, save_path=None, level='INFO'):
         logger.addHandler(fileHandler)
 
     return logger
+
+
+def over_write_args_from_file(args, yml):
+    """
+    overwrite arguments acocrding to config file
+    """
+    if yml == '':
+        return
+    with open(yml, 'r', encoding='utf-8') as f:
+        dic = yaml.load(f.read(), Loader=yaml.Loader)
+        for k in dic:
+            setattr(args, k, dic[k])
+
+def get_config():
+    parser = argparse.ArgumentParser(description='Open-Set Semi-Supervised Learning Framework')
+    # config file
+    parser.add_argument('--c', type=str, default='')
+
+    # add algorithm specific parameters
+    args = parser.parse_args()
+    over_write_args_from_file(args, args.c)
+    args = parser.parse_args()
+    over_write_args_from_file(args, args.c)
+    return args
